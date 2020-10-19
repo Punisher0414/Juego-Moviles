@@ -38,13 +38,15 @@ public class UIManager : MonoBehaviour
     public GameObject soundOnBtn;
     public GameObject musicOnBtn;
     public GameObject musicOffBtn;
+    public Text endLevel;
+    public GameObject endLevelButton;
 
     [Header("Premium Features Only")]
     public GameObject watchForCoinsBtn;
-    public GameObject leaderboardBtn;
-    public GameObject iapPurchaseBtn;
-    public GameObject removeAdsBtn;
-    public GameObject restorePurchaseBtn;
+    //public GameObject leaderboardBtn;
+    //public GameObject iapPurchaseBtn;
+    //public GameObject removeAdsBtn;
+    //public GameObject restorePurchaseBtn;
 
     [Header("Sharing-Specific")]
     public GameObject shareUI;
@@ -79,6 +81,11 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (ScoreManager.Instance.Score >= 20)
+        {
+            ShowGameOverUI();
+        }
+        if (mainCanvas.activeSelf)
         if (mainCanvas.activeSelf)
         {
             score.text = ScoreManager.Instance.Score.ToString();
@@ -147,10 +154,10 @@ public class UIManager : MonoBehaviour
 
         // Enable or disable premium stuff
         bool enablePremium = PremiumFeaturesManager.Instance.enablePremiumFeatures;
-        leaderboardBtn.SetActive(enablePremium);
-        iapPurchaseBtn.SetActive(enablePremium);
-        removeAdsBtn.SetActive(enablePremium);
-        restorePurchaseBtn.SetActive(enablePremium);
+        //leaderboardBtn.SetActive(enablePremium);
+        //iapPurchaseBtn.SetActive(enablePremium);
+        //removeAdsBtn.SetActive(enablePremium);
+        //restorePurchaseBtn.SetActive(enablePremium);
 
         // Hide Share screnenshot by default
         shareUI.SetActive(false);
@@ -182,6 +189,17 @@ public class UIManager : MonoBehaviour
 
     public void ShowGameOverUI()
     {
+        if (ScoreManager.Instance.Score >= 20)
+        {
+            endLevel.text = "Level finished";
+            endLevelButton.SetActive(true);
+            EndGame();
+        }
+        else {
+            endLevel.text = "You Loose";
+            endLevelButton.SetActive(false);
+            EndGame();
+        }
         blackPanel.SetActive(true);
         header.SetActive(true);
         title.gameObject.SetActive(false);
@@ -208,7 +226,7 @@ public class UIManager : MonoBehaviour
         // Not showing the daily reward button if the feature is disabled
         if (!DailyRewardController.Instance.disable)
         {
-            dailyRewardBtn.SetActive(true);
+            dailyRewardBtn.SetActive(false);
         }
 
         if (IsPremiumFeaturesEnabled())
@@ -298,7 +316,7 @@ public class UIManager : MonoBehaviour
 
     public void ShowRewardUI(int reward)
     {
-        rewardUI.SetActive(true);
+        rewardUI.SetActive(false);
         rewardUI.GetComponent<RewardUIController>().Reward(reward);
     }
 
@@ -355,7 +373,7 @@ public class UIManager : MonoBehaviour
             AnimatedClip clip = ScreenshotSharer.Instance.RecordedClip;
             shareUIController.AnimClip = clip;
 #endif
-            shareUI.SetActive(true);
+            shareUI.SetActive(false);
 
         }
     }

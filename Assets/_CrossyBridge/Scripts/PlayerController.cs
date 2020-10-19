@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!gameManager.gameOver)
         {
+
             // Check game over
             if (transform.rotation == Quaternion.Euler(0, 0, 0))
             {
@@ -70,67 +71,74 @@ public class PlayerController : MonoBehaviour
 
             Ray raydown = new Ray(transform.position + raycastPoint, Vector3.down);
             RaycastHit hit;
-            if (Physics.Raycast(raydown, out hit, 5f)) //Still alive
+
+            try
             {
-                if (!gameManager.gameOver)
+                if (Physics.Raycast(raydown, out hit, 5f)) //Still alive
                 {
-                    if (hit.collider.GetComponent<PlaneController>().isTheLastPlane) //This is the last plane, turn right here
+                    if (!gameManager.gameOver)
                     {
-                        if (dir == Vector3.forward) //Player moving forward -> turn and rotate left
+                        if (hit.collider.GetComponent<PlaneController>().isTheLastPlane) //This is the last plane, turn right here
                         {
-                            isRotateForward = false; //Reset
+                            if (dir == Vector3.forward) //Player moving forward -> turn and rotate left
+                            {
+                                isRotateForward = false; //Reset
 
-                            if (transform.position.z >= hit.transform.position.z - zPlaneScale && !isRotateLeft) //Rotate left
-                            {
-                                isRotateLeft = true;
-                                StartCoroutine(RotatePlayer(Vector3.down, -90));
-                            }
+                                if (transform.position.z >= hit.transform.position.z - zPlaneScale && !isRotateLeft) //Rotate left
+                                {
+                                    isRotateLeft = true;
+                                    StartCoroutine(RotatePlayer(Vector3.down, -90));
+                                }
 
-                            if (transform.position.z >= hit.transform.position.z + fixDistance) //change direction
-                            {
-                                float zAxis = hit.transform.position.z + fixDistance;
-                                transform.position = new Vector3(transform.position.x, transform.position.y, zAxis);
-                                dir = Vector3.left;
-                                hit.collider.GetComponent<PlaneController>().isTheLastPlane = false;
+                                if (transform.position.z >= hit.transform.position.z + fixDistance) //change direction
+                                {
+                                    float zAxis = hit.transform.position.z + fixDistance;
+                                    transform.position = new Vector3(transform.position.x, transform.position.y, zAxis);
+                                    dir = Vector3.left;
+                                    hit.collider.GetComponent<PlaneController>().isTheLastPlane = false;
+                                }
                             }
-                        }
-                        else //Player moving left -> turn and rotate forward
-                        {
-                            isRotateLeft = false; //Reset
+                            else //Player moving left -> turn and rotate forward
+                            {
+                                isRotateLeft = false; //Reset
 
-                            if (transform.position.x <= hit.transform.position.x + zPlaneScale && !isRotateForward)
-                            {
-                                isRotateForward = true;
-                                StartCoroutine(RotatePlayer(Vector3.up, 90)); //Rotate
-                            }
-                            if (transform.position.x <= hit.transform.position.x - fixDistance) //Change direction
-                            {
-                                float xAxis = hit.transform.position.x - fixDistance;
-                                transform.position = new Vector3(xAxis, transform.position.y, transform.position.z);
-                                dir = Vector3.forward;
-                                hit.collider.GetComponent<PlaneController>().isTheLastPlane = false;
+                                if (transform.position.x <= hit.transform.position.x + zPlaneScale && !isRotateForward)
+                                {
+                                    isRotateForward = true;
+                                    StartCoroutine(RotatePlayer(Vector3.up, 90)); //Rotate
+                                }
+                                if (transform.position.x <= hit.transform.position.x - fixDistance) //Change direction
+                                {
+                                    float xAxis = hit.transform.position.x - fixDistance;
+                                    transform.position = new Vector3(xAxis, transform.position.y, transform.position.z);
+                                    dir = Vector3.forward;
+                                    hit.collider.GetComponent<PlaneController>().isTheLastPlane = false;
+                                }
                             }
                         }
                     }
                 }
+                else //Die -> game over
+                {
+                    playerChild.GetComponent<Animator>().enabled = false;
+                    if (gameManager.listIndex < gameManager.listMovingPlane.Count)
+                    {
+                        gameManager.listMovingPlane[gameManager.listIndex].GetComponent<PlaneController>().stopMoving = true;
+                    }
+
+                    isRunning = false;
+
+                    if (!gameManager.gameOver)
+                    {
+                        gameManager.GameOver();
+                    }
+
+                    // Fall down
+                    StartCoroutine(CRPlayerFall(0.5f));
+                }
             }
-            else //Die -> game over
-            {
-                playerChild.GetComponent<Animator>().enabled = false;
-                if (gameManager.listIndex < gameManager.listMovingPlane.Count)
-                {
-                    gameManager.listMovingPlane[gameManager.listIndex].GetComponent<PlaneController>().stopMoving = true;
-                }
+            catch {
 
-                isRunning = false;
-
-                if (!gameManager.gameOver)
-                {
-                    gameManager.GameOver();
-                }
-
-                // Fall down
-                StartCoroutine(CRPlayerFall(0.5f));
             }
         }
     }

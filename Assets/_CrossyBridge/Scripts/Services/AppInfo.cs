@@ -39,7 +39,7 @@ public class AppInfo : MonoBehaviour
 
     public string FACEBOOK_ID = "[YOUR_FACEBOOK_PAGE_ID]";
 
-    public string TWITTER_NAME = "[YOUR_TWITTER_PAGE_NAME]";
+    public string TWITTER_NAME = "CyberpunkGame";
 
     public string SUPPORT_EMAIL = "[YOUR_SUPPORT_EMAIL]";
 
