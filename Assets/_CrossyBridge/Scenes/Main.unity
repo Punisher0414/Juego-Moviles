@@ -3927,6 +3927,10 @@ PrefabInstance:
       propertyPath: TWITTER_NAME
       value: CyberpunkGame
       objectReference: {fileID: 0}
+    - target: {fileID: 11496204, guid: 87d32f82f7fb6405d929088046ec6ecb, type: 3}
+      propertyPath: APP_NAME
+      value: Crazy Barn
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 87d32f82f7fb6405d929088046ec6ecb, type: 3}
 --- !u!1 &956916527
