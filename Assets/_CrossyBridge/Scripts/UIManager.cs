@@ -207,7 +207,7 @@ public class UIManager : MonoBehaviour
         tapToStart.SetActive(false);
         menuButtons.SetActive(true);
 
-        watchForCoinsBtn.gameObject.SetActive(false);
+        watchForCoinsBtn.gameObject.SetActive(true);
         settingsCanvas.SetActive(false);
 
         // Only show "watch for coins button" if a rewarded ad is loaded and premium features are enabled
